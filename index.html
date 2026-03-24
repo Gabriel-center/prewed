@@ -4,13 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Amanda & Gabriel</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@400;500;600&display=swap');
+
   *{margin:0;padding:0;box-sizing:border-box}
   :root{--wa-bg:#ECE5DD;--wa-header:#075E54;--wa-green:#D9FDD3;--wa-white:#FFF;--wa-text:#111B21;--wa-time:#667781;--wa-call-green:#00A884}
   html,body{height:100%;overflow:hidden;touch-action:manipulation}
   body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:#F5F0EB;-webkit-font-smoothing:antialiased}
-  .envelope-intro{position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;background:linear-gradient(160deg,#F5F0EB,#EDE6DD);display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .6s ease}
+
+  /* ========== ENVELOPE INTRO ========== */
+  .envelope-intro{position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;background:linear-gradient(160deg,#F5F0EB 0%,#EDE6DD 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .6s ease}
   .envelope-intro.hidden{opacity:0;pointer-events:none}
   .envelope-wrapper{position:relative;cursor:pointer;-webkit-user-select:none;user-select:none;animation:envelopeFall 1.2s cubic-bezier(.34,1.56,.64,1) forwards;opacity:0}
   @keyframes envelopeFall{0%{opacity:0;transform:translateY(-120vh) rotate(-8deg)}60%{opacity:1;transform:translateY(10px) rotate(2deg)}80%{transform:translateY(-5px) rotate(-1deg)}100%{opacity:1;transform:translateY(0) rotate(0)}}
@@ -19,9 +23,12 @@
   @keyframes hintIn{from{opacity:0;transform:translateY(8px)}to{opacity:.7;transform:translateY(0)}}
   .envelope-wrapper.opening{animation:envelopeOpen 1.4s cubic-bezier(.4,0,.2,1) forwards}
   @keyframes envelopeOpen{0%{transform:scale(1) translateY(0);opacity:1}30%{transform:scale(1.05) translateY(-10px);opacity:1}100%{transform:scale(14) translateY(0);opacity:0}}
+
+  /* ========== PHONE FRAME ========== */
   .phone-frame{max-width:430px;margin:0 auto;height:100vh;height:100dvh;display:flex;flex-direction:column;background:var(--wa-bg);position:relative;overflow:hidden;opacity:0;transition:opacity .5s ease}
   .phone-frame.active{opacity:1}
   .phone-frame::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c8bfb6' fill-opacity='0.12'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");opacity:.5;z-index:0;pointer-events:none}
+
   .wa-header{background:var(--wa-header);padding:10px;display:flex;align-items:center;gap:10px;z-index:10;flex-shrink:0}
   .wa-back svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
   .wa-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#89CFF0,#6BA8D4);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;color:#fff;font-weight:600;overflow:hidden}
@@ -31,6 +38,7 @@
   .wa-contact-status{color:rgba(255,255,255,.75);font-size:12.5px;margin-top:1px}
   .wa-header-icons{display:flex;gap:16px;flex-shrink:0}
   .wa-header-icons svg{width:22px;height:22px;fill:#fff}
+
   .wa-chat{flex:1;overflow-y:auto;padding:6px 14px 8px;display:flex;flex-direction:column;gap:2px;z-index:1;position:relative;scroll-behavior:smooth}
   .date-chip{align-self:center;background:rgba(255,255,255,.92);padding:6px 16px;border-radius:8px;font-size:12.5px;color:var(--wa-time);margin:6px 0 8px;box-shadow:0 1px 1px rgba(0,0,0,.06);opacity:0;transform:scale(.92);transition:opacity .3s,transform .3s}
   .date-chip.visible{opacity:1;transform:scale(1)}
@@ -63,7 +71,9 @@
   .wa-input-text{flex:1}
   .wa-mic-btn{width:44px;height:44px;border-radius:50%;background:var(--wa-header);display:flex;align-items:center;justify-content:center;flex-shrink:0}
   .wa-mic-btn svg{width:22px;height:22px;fill:#fff}
-  .call-screen{position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;background:linear-gradient(170deg,#075E54,#054C44 40%,#022e28);display:flex;flex-direction:column;align-items:center;padding-top:22vh;opacity:0;pointer-events:none;transition:opacity .4s ease;color:#fff;overflow:hidden}
+
+  /* ========== CALL SCREEN ========== */
+  .call-screen{position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;background:linear-gradient(170deg,#075E54 0%,#054C44 40%,#022e28 100%);display:flex;flex-direction:column;align-items:center;padding-top:22vh;opacity:0;pointer-events:none;transition:opacity .4s ease;color:#fff;overflow:hidden}
   .call-screen.active{opacity:1;pointer-events:auto}
   .call-avatar-large{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#89CFF0,#6BA8D4);display:flex;align-items:center;justify-content:center;font-size:44px;color:#fff;font-weight:300;margin-bottom:22px;font-family:'Cormorant Garamond',Georgia,serif;overflow:hidden;box-shadow:0 0 80px rgba(137,207,240,.15)}
   .call-avatar-large img{width:100%;height:100%;object-fit:cover}
@@ -80,17 +90,24 @@
   @keyframes swipeTextPulse{0%,100%{opacity:.45}50%{opacity:.75}}
   .fade-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:300;opacity:0;pointer-events:none;transition:opacity .8s ease}
   .fade-overlay.active{opacity:1;pointer-events:auto}
-  .final-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:400;display:flex;align-items:center;justify-content:center;flex-direction:column;pointer-events:none;opacity:0;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:opacity .5s ease}
+
+  /* ========== FINAL REVEAL ========== */
+  .final-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:400;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:opacity .5s ease;overflow-y:auto}
   .final-overlay.active{opacity:1;pointer-events:auto}
-  .final-scene{position:relative;display:flex;align-items:center;justify-content:center;width:300px;height:360px}
-  .final-envelope-wrap{position:absolute;z-index:5;transform:translateX(110vw);transition:transform .9s cubic-bezier(.34,1.56,.64,1);filter:drop-shadow(0 8px 30px rgba(0,0,0,.15));cursor:pointer}
+  .final-scene{position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:100%;padding:40px 0}
+  .final-envelope-wrap{z-index:5;transform:translateX(110vw);transition:transform .9s cubic-bezier(.34,1.56,.64,1);filter:drop-shadow(0 8px 30px rgba(0,0,0,.15));cursor:pointer}
   .final-overlay.active .final-envelope-wrap{transform:translateX(0)}
   .final-envelope-wrap.away{transform:translateX(110vw)!important;transition:transform .7s cubic-bezier(.6,0,.4,1)!important}
   .final-envelope-svg{width:280px;height:auto}
-  .final-tap-hint{position:absolute;z-index:6;bottom:-50px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(255,255,255,.55);letter-spacing:1.5px;text-transform:uppercase;font-weight:500;opacity:0;transition:opacity .4s ease;white-space:nowrap}
-  .final-tap-hint.visible{opacity:1;animation:swipeTextPulse 2s ease-in-out infinite}
-  .final-card-wrapper{position:absolute;z-index:6;opacity:0;transform:translateY(60px);transition:opacity .7s ease,transform 1s cubic-bezier(.22,1,.36,1)}
-  .final-card-wrapper.reveal{opacity:1;transform:translateY(-20px)}
+  .final-tap-hint{font-size:12px;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;margin-top:16px;text-align:center;opacity:0;animation:hintIn .6s ease .8s forwards;font-weight:500}
+
+  .final-card-area{display:none;flex-direction:column;align-items:center;gap:20px}
+  .final-card-area.show{display:flex}
+
+  .final-card-wrapper{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform 1s cubic-bezier(.22,1,.36,1)}
+  .final-card-wrapper.reveal{opacity:1;transform:translateY(0)}
+
+  /* ========== CARD ========== */
   .std-card{position:relative;width:320px;max-width:88vw;border-radius:6px;padding:52px 36px 46px;text-align:center;overflow:hidden;box-shadow:0 16px 50px rgba(0,0,0,.2)}
   .std-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:#FDFBF8;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");z-index:0}
   .wc-blob{position:absolute;border-radius:50%;z-index:1;opacity:0}
@@ -113,7 +130,7 @@
   .std-content{position:relative;z-index:2}
   .std-eyebrow{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:#5A9ABF;margin-bottom:28px;font-weight:600;opacity:0}
   .final-card-wrapper.reveal .std-eyebrow{animation:stdIn .8s ease forwards .6s}
-  .std-names{font-family:'Cormorant Garamond',Georgia,serif;font-size:36px;font-weight:400;color:#2A3A4A;line-height:1.3;opacity:0}
+  .std-names{font-family:'Cormorant Garamond',Georgia,serif;font-size:36px;font-weight:400;color:#2A3A4A;letter-spacing:0;line-height:1.3;opacity:0}
   .final-card-wrapper.reveal .std-names{animation:stdIn .8s ease forwards .8s}
   .std-ampersand{display:block;font-size:22px;color:#6BA8D4;margin:6px 0;font-style:italic;font-weight:300}
   .std-line{width:50px;height:1.5px;background:linear-gradient(90deg,transparent,#89CFF0,transparent);margin:28px auto;opacity:0}
@@ -127,43 +144,64 @@
   .std-footer{font-family:'Inter',sans-serif;margin-top:28px;font-size:11px;color:#93B3C5;letter-spacing:1.8px;text-transform:uppercase;font-weight:500;opacity:0;line-height:1.7}
   .final-card-wrapper.reveal .std-footer{animation:stdIn .8s ease forwards 1.8s}
   @keyframes stdIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-  .action-buttons{display:flex;gap:12px;margin-top:20px;opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease;z-index:10;flex-wrap:wrap;justify-content:center}
-  .action-buttons.visible{opacity:1;transform:translateY(0)}
-  .action-btn{display:flex;align-items:center;gap:8px;padding:12px 20px;border-radius:30px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;letter-spacing:.5px;cursor:pointer;transition:transform .2s ease;text-decoration:none;-webkit-user-select:none;user-select:none}
+
+  /* ========== ACTION BUTTONS ========== */
+  .action-buttons{display:flex;gap:12px;opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease;margin-top:4px}
+  .action-buttons.show{opacity:1;transform:translateY(0)}
+  .action-btn{
+    display:flex;align-items:center;gap:8px;
+    padding:13px 20px;border-radius:50px;border:none;cursor:pointer;
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+    letter-spacing:.5px;transition:transform .2s,box-shadow .2s;
+    -webkit-user-select:none;user-select:none;
+  }
   .action-btn:active{transform:scale(.96)}
   .action-btn svg{width:18px;height:18px;flex-shrink:0}
-  .btn-calendar{background:#24488E;color:#fff;box-shadow:0 4px 16px rgba(36,72,142,.35)}
-  .btn-download{background:#FDFBF8;color:#3A5A6E;box-shadow:0 4px 16px rgba(0,0,0,.1);border:1px solid #D4C4A8}
+  .btn-calendar{background:#3A6B8E;color:#fff;box-shadow:0 4px 16px rgba(58,107,142,.35)}
+  .btn-calendar:hover{box-shadow:0 6px 20px rgba(58,107,142,.5)}
+  .btn-download{background:#fff;color:#3A6B8E;box-shadow:0 4px 16px rgba(0,0,0,.1);border:1.5px solid #C8DDE8}
+  .btn-download:hover{box-shadow:0 6px 20px rgba(0,0,0,.15)}
+
   @media(min-width:431px){.phone-frame{border-left:1px solid #ccc;border-right:1px solid #ccc}}
   @supports(padding-bottom:env(safe-area-inset-bottom)){.wa-input-bar{padding-bottom:calc(6px + env(safe-area-inset-bottom))}}
 </style>
 </head>
 <body>
+
+<!-- Music -->
+<audio id="bgMusic" preload="auto"><source src="musica.mp3" type="audio/mpeg"></audio>
+
+<!-- ========== ENVELOPE INTRO ========== -->
 <div class="envelope-intro" id="introScreen">
   <div class="envelope-wrapper" id="envelopeWrapper" onclick="openEnvelope()">
     <svg class="envelope-svg" viewBox="0 0 260 190" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="5" y="40" width="250" height="145" rx="6" fill="#F8F1E8" stroke="#D4C4A8" stroke-width="1.5"/>
-      <path d="M5 185 L130 120 L255 185" stroke="#E8DBC8" stroke-width=".7" fill="none"/>
+      <path d="M5 185 L130 120 L255 185" stroke="#E8DBC8" stroke-width="0.7" fill="none"/>
       <path d="M5 40 L255 40 L130 130 Z" fill="#EDE5D8" stroke="#D4C4A8" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M15 45 L130 122 L245 45" stroke="#DDD2C0" stroke-width=".5" fill="none" opacity=".6"/>
+      <path d="M15 45 L130 122 L245 45" stroke="#DDD2C0" stroke-width="0.5" fill="none" opacity="0.6"/>
       <circle cx="130" cy="100" r="28" fill="#1A3A7A"/><circle cx="130" cy="100" r="25" fill="#24488E"/>
-      <circle cx="130" cy="100" r="22" fill="none" stroke="#152E65" stroke-width=".8" opacity=".5"/>
-      <circle cx="130" cy="100" r="18" fill="none" stroke="#6080B8" stroke-width=".5" opacity=".35"/>
-      <ellipse cx="122" cy="93" rx="9" ry="5" fill="#3568B2" opacity=".35"/>
-      <text x="130" y="96" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="13" font-weight="600" fill="#D0DFEF">A</text>
-      <text x="130" y="104" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="8" font-style="italic" fill="#A0BFE0">&amp;</text>
-      <text x="130" y="113" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="13" font-weight="600" fill="#D0DFEF">G</text>
+      <circle cx="130" cy="100" r="22" fill="none" stroke="#152E65" stroke-width="0.8" opacity="0.5"/>
+      <circle cx="130" cy="100" r="18" fill="none" stroke="#6080B8" stroke-width="0.5" opacity="0.35"/>
+      <ellipse cx="122" cy="93" rx="9" ry="5" fill="#3568B2" opacity="0.35"/>
+      <text x="130" y="96" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="13" font-weight="600" fill="#D0DFEF" letter-spacing="0.5">A</text>
+      <text x="130" y="104" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="8" font-style="italic" fill="#A0BFE0" letter-spacing="0.5">&amp;</text>
+      <text x="130" y="113" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="13" font-weight="600" fill="#D0DFEF" letter-spacing="0.5">G</text>
       <ellipse cx="111" cy="118" rx="4" ry="7" fill="#24488E"/><ellipse cx="151" cy="116" rx="3" ry="5" fill="#24488E"/><ellipse cx="115" cy="82" rx="3" ry="4" fill="#24488E"/>
     </svg>
   </div>
   <div class="tap-hint">Toque para abrir</div>
 </div>
+
+<!-- ========== CHAT ========== -->
 <div class="phone-frame" id="phoneFrame">
   <div class="wa-header">
     <div class="wa-back"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
-    <div class="wa-avatar"><img src="foto.jpg" alt="A" onerror="this.remove()"></div>
+    <div class="wa-avatar"><img src="foto.jpg" alt="A" onerror="this.style.display='none';this.parentElement.textContent='A'"></div>
     <div class="wa-contact-info"><div class="wa-contact-name">Amanda ❤️</div><div class="wa-contact-status">online</div></div>
-    <div class="wa-header-icons"><svg viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z" fill="#fff"/></svg><svg viewBox="0 0 24 24"><path d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z" fill="#fff"/></svg></div>
+    <div class="wa-header-icons">
+      <svg viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z" fill="#fff"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z" fill="#fff"/></svg>
+    </div>
   </div>
   <div class="wa-chat" id="chat">
     <div class="date-chip" id="dateChip">22/03/2026</div>
@@ -171,12 +209,18 @@
     <div class="typing-indicator out" id="typingOut"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
   </div>
   <div class="wa-input-bar">
-    <div class="wa-input-field"><svg viewBox="0 0 24 24"><path d="M9.153 11.603c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962zm-3.204 1.362c-.026-.307-.131 5.218 6.063 5.551 6.066-.25 6.066-5.551 6.066-5.551-6.078 1.416-12.129 0-12.129 0zm11.363 1.108s-.669 1.959-5.051 1.959c-3.505 0-5.388-1.164-5.607-1.959 0 0 5.912 1.055 10.658 0zM11.804 1.011C5.298 1.011 0 6.31 0 12.813s5.298 11.803 11.804 11.803 11.804-5.298 11.804-11.803S18.31 1.011 11.804 1.011zM12 21.603c-4.879 0-8.826-3.948-8.826-8.826S7.121 3.951 12 3.951s8.826 3.948 8.826 8.826-3.948 8.826-8.826 8.826zm2.74-10c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962z" fill="#9E9E9E"/></svg><span class="wa-input-text">Mensagem</span><svg viewBox="0 0 24 24"><path d="M1.816 15.556v.002c0 1.502.584 2.912 1.646 3.972s2.472 1.647 3.974 1.647a5.58 5.58 0 003.972-1.645l9.547-9.548c.769-.768 1.147-1.767 1.058-2.817-.079-.968-.548-1.927-1.319-2.698-1.594-1.592-4.068-1.711-5.517-.262l-7.916 7.915c-.881.881-.792 2.25.214 3.261.959.958 2.423 1.053 3.263.215l5.511-5.512c.28-.28.267-.722.053-.936l-.244-.244c-.191-.191-.567-.349-.957.04l-5.506 5.506c-.18.18-.635.127-.976-.214-.098-.097-.576-.613-.213-.973l7.915-7.917c.818-.817 2.267-.699 3.23.262.5.501.802 1.1.849 1.685.051.573-.156 1.111-.589 1.543l-9.547 9.549a3.97 3.97 0 01-2.829 1.171 3.975 3.975 0 01-2.83-1.171 3.973 3.973 0 01-1.172-2.828c0-1.071.415-2.076 1.172-2.83l7.209-7.211c.157-.157.264-.579.028-.814L11.5 4.36a.606.606 0 00-.86.024l-7.21 7.21a5.573 5.573 0 00-1.614 3.962z" fill="#9E9E9E"/></svg></div>
+    <div class="wa-input-field">
+      <svg viewBox="0 0 24 24"><path d="M9.153 11.603c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962zm-3.204 1.362c-.026-.307-.131 5.218 6.063 5.551 6.066-.25 6.066-5.551 6.066-5.551-6.078 1.416-12.129 0-12.129 0zm11.363 1.108s-.669 1.959-5.051 1.959c-3.505 0-5.388-1.164-5.607-1.959 0 0 5.912 1.055 10.658 0zM11.804 1.011C5.298 1.011 0 6.31 0 12.813s5.298 11.803 11.804 11.803 11.804-5.298 11.804-11.803S18.31 1.011 11.804 1.011zM12 21.603c-4.879 0-8.826-3.948-8.826-8.826S7.121 3.951 12 3.951s8.826 3.948 8.826 8.826-3.948 8.826-8.826 8.826zm2.74-10c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962z" fill="#9E9E9E"/></svg>
+      <span class="wa-input-text">Mensagem</span>
+      <svg viewBox="0 0 24 24"><path d="M1.816 15.556v.002c0 1.502.584 2.912 1.646 3.972s2.472 1.647 3.974 1.647a5.58 5.58 0 003.972-1.645l9.547-9.548c.769-.768 1.147-1.767 1.058-2.817-.079-.968-.548-1.927-1.319-2.698-1.594-1.592-4.068-1.711-5.517-.262l-7.916 7.915c-.881.881-.792 2.25.214 3.261.959.958 2.423 1.053 3.263.215l5.511-5.512c.28-.28.267-.722.053-.936l-.244-.244c-.191-.191-.567-.349-.957.04l-5.506 5.506c-.18.18-.635.127-.976-.214-.098-.097-.576-.613-.213-.973l7.915-7.917c.818-.817 2.267-.699 3.23.262.5.501.802 1.1.849 1.685.051.573-.156 1.111-.589 1.543l-9.547 9.549a3.97 3.97 0 01-2.829 1.171 3.975 3.975 0 01-2.83-1.171 3.973 3.973 0 01-1.172-2.828c0-1.071.415-2.076 1.172-2.83l7.209-7.211c.157-.157.264-.579.028-.814L11.5 4.36a.606.606 0 00-.86.024l-7.21 7.21a5.573 5.573 0 00-1.614 3.962z" fill="#9E9E9E"/></svg>
+    </div>
     <div class="wa-mic-btn"><svg viewBox="0 0 24 24"><path d="M11.999 14.942c2.001 0 3.531-1.53 3.531-3.531V4.35c0-2.001-1.53-3.531-3.531-3.531S8.469 2.35 8.469 4.35v7.061c0 2.001 1.53 3.531 3.53 3.531zm6.238-3.53c0 3.531-2.942 6.002-6.237 6.002s-6.237-2.471-6.237-6.002H3.761c0 4.001 3.178 7.297 7.061 7.885v3.884h2.354v-3.884c3.884-.588 7.061-3.884 7.061-7.885h-2z" fill="#fff"/></svg></div>
   </div>
 </div>
+
+<!-- Call screen -->
 <div class="call-screen" id="callScreen">
-  <div class="call-avatar-large"><img src="foto.jpg" alt="A" onerror="this.remove()"></div>
+  <div class="call-avatar-large"><img src="foto.jpg" alt="A" onerror="this.style.display='none';this.parentElement.textContent='A'"></div>
   <div class="call-name-large">Amanda ❤️</div>
   <div class="call-status-text">Ligação de voz recebida</div>
   <div class="call-swipe-area" id="swipeArea">
@@ -186,54 +230,68 @@
   </div>
 </div>
 <div class="fade-overlay" id="fadeOverlay"></div>
+
+<!-- ========== FINAL REVEAL ========== -->
 <div class="final-overlay" id="finalOverlay">
   <div class="final-scene">
+    <!-- Closed envelope — click to open -->
     <div class="final-envelope-wrap" id="finalEnvelopeWrap">
       <svg class="final-envelope-svg" viewBox="0 0 260 190" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="5" y="40" width="250" height="145" rx="6" fill="#F8F1E8" stroke="#D4C4A8" stroke-width="1.5"/>
-        <path d="M5 185 L130 120 L255 185" stroke="#E8DBC8" stroke-width=".7" fill="none"/>
-        <g id="closedFlap"><path d="M5 40 L255 40 L130 130 Z" fill="#EDE5D8" stroke="#D4C4A8" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M5 185 L130 120 L255 185" stroke="#E8DBC8" stroke-width="0.7" fill="none"/>
+        <g id="closedFlap">
+          <path d="M5 40 L255 40 L130 130 Z" fill="#EDE5D8" stroke="#D4C4A8" stroke-width="1.5" stroke-linejoin="round"/>
           <circle cx="130" cy="100" r="28" fill="#1A3A7A"/><circle cx="130" cy="100" r="25" fill="#24488E"/>
-          <circle cx="130" cy="100" r="22" fill="none" stroke="#152E65" stroke-width=".8" opacity=".5"/>
-          <circle cx="130" cy="100" r="18" fill="none" stroke="#6080B8" stroke-width=".5" opacity=".35"/>
-          <ellipse cx="122" cy="93" rx="9" ry="5" fill="#3568B2" opacity=".35"/>
-          <text x="130" y="96" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="13" font-weight="600" fill="#D0DFEF">A</text>
-          <text x="130" y="104" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="8" font-style="italic" fill="#A0BFE0">&amp;</text>
-          <text x="130" y="113" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="13" font-weight="600" fill="#D0DFEF">G</text>
+          <circle cx="130" cy="100" r="22" fill="none" stroke="#152E65" stroke-width="0.8" opacity="0.5"/>
+          <circle cx="130" cy="100" r="18" fill="none" stroke="#6080B8" stroke-width="0.5" opacity="0.35"/>
+          <ellipse cx="122" cy="93" rx="9" ry="5" fill="#3568B2" opacity="0.35"/>
+          <text x="130" y="96" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="13" font-weight="600" fill="#D0DFEF" letter-spacing="0.5">A</text>
+          <text x="130" y="104" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="8" font-style="italic" fill="#A0BFE0" letter-spacing="0.5">&amp;</text>
+          <text x="130" y="113" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="13" font-weight="600" fill="#D0DFEF" letter-spacing="0.5">G</text>
           <ellipse cx="111" cy="118" rx="4" ry="7" fill="#24488E"/><ellipse cx="151" cy="116" rx="3" ry="5" fill="#24488E"/><ellipse cx="115" cy="82" rx="3" ry="4" fill="#24488E"/>
         </g>
-        <g id="openFlap" style="display:none"><path d="M5 40 L130 5 L255 40" fill="#F0E8D8" stroke="#D4C4A8" stroke-width="1.5" stroke-linejoin="round"/></g>
+        <g id="openFlap" style="display:none">
+          <path d="M5 40 L130 5 L255 40" fill="#F0E8D8" stroke="#D4C4A8" stroke-width="1.5" stroke-linejoin="round"/>
+        </g>
       </svg>
       <div class="final-tap-hint" id="finalTapHint">Toque para abrir</div>
     </div>
-    <div class="final-card-wrapper" id="finalCard">
-      <div class="std-card">
-        <div class="wc-blob wc-blob-1"></div><div class="wc-blob wc-blob-2"></div><div class="wc-blob wc-blob-3"></div><div class="wc-blob wc-blob-4"></div><div class="wc-blob wc-blob-5"></div><div class="wc-blob wc-blob-6"></div><div class="wc-blob wc-blob-7"></div>
-        <div class="wc-drip wc-drip-1"></div><div class="wc-drip wc-drip-2"></div><div class="wc-drip wc-drip-3"></div><div class="wc-drip wc-drip-4"></div>
-        <div class="std-content">
-          <div class="std-eyebrow">Save the Date</div>
-          <div class="std-names">Amanda<span class="std-ampersand">&</span>Gabriel</div>
-          <div class="std-line"></div>
-          <div class="std-date">12 · 09 · 2026</div>
-          <div class="std-city">Hortolândia, SP</div>
-          <div class="std-years">8 anos de história</div>
-          <div class="std-footer">Mais informações em breve<br>Reserve a data na sua agenda!</div>
+
+    <!-- Card + buttons area -->
+    <div class="final-card-area" id="finalCardArea">
+      <div class="final-card-wrapper" id="finalCard">
+        <div class="std-card" id="stdCardCapture">
+          <div class="wc-blob wc-blob-1"></div><div class="wc-blob wc-blob-2"></div><div class="wc-blob wc-blob-3"></div>
+          <div class="wc-blob wc-blob-4"></div><div class="wc-blob wc-blob-5"></div><div class="wc-blob wc-blob-6"></div><div class="wc-blob wc-blob-7"></div>
+          <div class="wc-drip wc-drip-1"></div><div class="wc-drip wc-drip-2"></div><div class="wc-drip wc-drip-3"></div><div class="wc-drip wc-drip-4"></div>
+          <div class="std-content">
+            <div class="std-eyebrow">Save the Date</div>
+            <div class="std-names">Amanda<span class="std-ampersand">&</span>Gabriel</div>
+            <div class="std-line"></div>
+            <div class="std-date">12 · 09 · 2026</div>
+            <div class="std-city">Hortolândia, SP</div>
+            <div class="std-years">8 anos de história</div>
+            <div class="std-footer">Mais informações em breve<br>Reserve a data na sua agenda!</div>
+          </div>
         </div>
+      </div>
+
+      <div class="action-buttons" id="actionButtons">
+        <button class="action-btn btn-calendar" onclick="addToCalendar()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Salvar na agenda
+        </button>
+        <button class="action-btn btn-download" onclick="downloadCard()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Baixar imagem
+        </button>
       </div>
     </div>
   </div>
-  <div class="action-buttons" id="actionButtons">
-    <button class="action-btn btn-calendar" onclick="addToCalendar()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Salvar na agenda
-    </button>
-    <button class="action-btn btn-download" onclick="downloadCard()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#3A5A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Baixar card
-    </button>
-  </div>
 </div>
+
 <script>
+// ===== AUDIO ENGINE =====
 var audioCtx=null;
 function initAudio(){if(!audioCtx)try{audioCtx=new(window.AudioContext||window.webkitAudioContext)}catch(e){}}
 function playTone(f,d,v,t){if(!audioCtx)return;try{var o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t||'sine';o.frequency.setValueAtTime(f,audioCtx.currentTime);g.gain.setValueAtTime(v||.08,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}catch(e){}}
@@ -246,37 +304,27 @@ function soundAnswer(){playTone(520,.12,.08);setTimeout(function(){playTone(660,
 function soundSeal(){playTone(250,.25,.07);setTimeout(function(){playTone(350,.2,.05)},100)}
 function soundReveal(){playTone(523,.3,.07);setTimeout(function(){playTone(659,.3,.06)},200);setTimeout(function(){playTone(784,.5,.06)},400)}
 
-function addToCalendar(){
-  var ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//SaveTheDate//EN','CALSCALE:GREGORIAN','BEGIN:VEVENT',
-    'DTSTART:20260912T140000','DTEND:20260913T040000',
-    'SUMMARY:Casamento Amanda & Gabriel',
-    'DESCRIPTION:Casamento de Amanda e Gabriel - Hortolândia\\, SP. Mais informações em breve!',
-    'LOCATION:Hortolândia\\, SP',
-    'STATUS:CONFIRMED',
-    'END:VEVENT','END:VCALENDAR'].join('\r\n');
-  var b=new Blob([ics],{type:'text/calendar;charset=utf-8'});
-  var u=URL.createObjectURL(b);var a=document.createElement('a');
-  a.href=u;a.download='casamento-amanda-gabriel.ics';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);
-}
-
-function downloadCard(){
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box}body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#F5F0EB;font-family:Inter,system-ui,sans-serif}.c{position:relative;width:400px;max-width:90vw;border-radius:6px;padding:64px 48px 56px;text-align:center;overflow:hidden;background:#FDFBF8;box-shadow:0 16px 50px rgba(0,0,0,.15)}.e{font-size:11px;letter-spacing:5px;text-transform:uppercase;color:#5A9ABF;margin-bottom:28px;font-weight:600}.n{font-family:"Cormorant Garamond",Georgia,serif;font-size:40px;font-weight:400;color:#2A3A4A;line-height:1.3}.a{display:block;font-size:24px;color:#6BA8D4;margin:6px 0;font-style:italic;font-weight:300}.l{width:50px;height:1.5px;background:linear-gradient(90deg,transparent,#89CFF0,transparent);margin:28px auto}.d{font-size:18px;letter-spacing:3.5px;text-transform:uppercase;color:#3A5A6E;margin-bottom:10px;font-weight:600}.ci{font-size:14px;letter-spacing:2.5px;text-transform:uppercase;color:#6B8EA0;font-weight:500}.y{font-family:"Cormorant Garamond",Georgia,serif;font-size:17px;color:#7EA8BF;margin-top:30px;font-style:italic}.f{margin-top:28px;font-size:11px;color:#93B3C5;letter-spacing:1.8px;text-transform:uppercase;font-weight:500;line-height:1.7}</style></head><body><div class="c"><div class="e">Save the Date</div><div class="n">Amanda<span class="a">&</span>Gabriel</div><div class="l"></div><div class="d">12 · 09 · 2026</div><div class="ci">Hortolândia, SP</div><div class="y">8 anos de história</div><div class="f">Mais informações em breve<br>Reserve a data na sua agenda!</div></div></body></html>';
-  var b=new Blob([html],{type:'text/html;charset=utf-8'});var u=URL.createObjectURL(b);
-  var a=document.createElement('a');a.href=u;a.download='save-the-date-amanda-gabriel.html';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);
-}
-
+// ===== INTRO ENVELOPE =====
 var started=false;
-function openEnvelope(){if(started)return;started=true;initAudio();soundSeal();
+function openEnvelope(){
+  if(started)return;started=true;
+  initAudio();soundSeal();
+  // Play music
+  try{var m=document.getElementById('bgMusic');m.currentTime=0;m.play().catch(function(){})}catch(e){}
   document.getElementById('envelopeWrapper').classList.add('opening');
-  setTimeout(function(){document.getElementById('introScreen').classList.add('hidden');document.body.style.background='#DAD3CC';
+  setTimeout(function(){
+    document.getElementById('introScreen').classList.add('hidden');
+    document.body.style.background='#DAD3CC';
     document.getElementById('phoneFrame').classList.add('active');
-    setTimeout(function(){document.getElementById('introScreen').style.display='none';play()},300)},1e3)}
+    setTimeout(function(){document.getElementById('introScreen').style.display='none';play()},300);
+  },1e3);
+}
 
+// ===== CHAT ENGINE =====
 var chat=document.getElementById('chat'),typingIn=document.getElementById('typingIn'),typingOut=document.getElementById('typingOut');
 var blueChecks='<svg viewBox="0 0 20 13" width="19" height="13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 6.5L6.5 11L14 3.5" stroke="#53BDEB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 6.5L10.5 11L18 3.5" stroke="#53BDEB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var greenPhone='<svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z" fill="#00A884"/></svg>';
+
 var script=[
   {from:'in',text:'moo',time:'16:48'},{from:'in',text:'posso te ligar?',time:'16:48',delay:900},
   {from:'out',text:'Uia, pra quê?',time:'16:50',delay:2400},
@@ -298,18 +346,135 @@ var script=[
   {from:'out',text:'Já tô cuidando disso 😉',time:'21:44',delay:2600},
   {from:'in',text:'Te amo boboca',time:'21:45',delay:2600},
   {from:'out',text:'Eu te amo mais ❤️😌',time:'21:45',delay:2400},
-  {type:'savethedate',delay:2800}];
+  {type:'savethedate',delay:2800}
+];
+
 function createMsg(m){var d=document.createElement('div');d.className='msg msg-'+m.from;var o=m.from==='out';d.innerHTML='<span class="msg-text">'+m.text+'</span><span class="msg-meta"><span class="msg-time">'+m.time+'</span>'+(o?'<span class="msg-check">'+blueChecks+'</span>':'')+'</span>';return d}
 function createCallLog(){var d=document.createElement('div');d.className='msg-call';d.innerHTML='<div class="call-icon">'+greenPhone+'</div><div class="call-info"><div class="call-label">Ligação de voz</div><div class="call-duration">4h 36min</div></div><div class="call-time-meta">17:02</div>';return d}
 function showTyping(f){var e=f==='in'?typingIn:typingOut;chat.appendChild(e);e.classList.add('show');scrollB()}
 function hideTyping(f){(f==='in'?typingIn:typingOut).classList.remove('show')}
 function scrollB(){chat.scrollTo({top:chat.scrollHeight,behavior:'smooth'})}
 function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
-function showCallScreen(){return new Promise(function(resolve){var s=document.getElementById('callScreen'),b=document.getElementById('swipeBtn'),a=document.getElementById('swipeArea');s.classList.add('active');soundRingStart();function h(e){e.preventDefault();a.removeEventListener('click',h);a.removeEventListener('touchend',h);soundRingStop();soundAnswer();b.style.cssText='transform:translateY(-100px) scale(1.15);opacity:0;transition:all .4s ease';setTimeout(function(){var f=document.getElementById('fadeOverlay');f.classList.add('active');setTimeout(function(){s.classList.remove('active');b.style.cssText='';setTimeout(function(){f.classList.remove('active');resolve()},900)},1400)},500)}a.addEventListener('click',h);a.addEventListener('touchend',h)})}
-var envelopeClickable=false,envelopeOpened=false;
-function showFinalReveal(){var overlay=document.getElementById('finalOverlay');var envWrap=document.getElementById('finalEnvelopeWrap');var hint=document.getElementById('finalTapHint');overlay.classList.add('active');setTimeout(function(){hint.classList.add('visible');envelopeClickable=true},1100);envWrap.addEventListener('click',handleEnvelopeOpen);envWrap.addEventListener('touchend',handleEnvelopeOpen)}
-function handleEnvelopeOpen(e){if(!envelopeClickable||envelopeOpened)return;e.preventDefault();envelopeOpened=true;var envWrap=document.getElementById('finalEnvelopeWrap'),card=document.getElementById('finalCard'),closedFlap=document.getElementById('closedFlap'),openFlap=document.getElementById('openFlap'),hint=document.getElementById('finalTapHint'),buttons=document.getElementById('actionButtons');soundSeal();hint.classList.remove('visible');openFlap.style.display='block';closedFlap.style.transition='opacity .5s ease';closedFlap.style.opacity='0';setTimeout(function(){closedFlap.style.display='none'},500);setTimeout(function(){soundReveal();card.classList.add('reveal')},600);setTimeout(function(){envWrap.classList.add('away')},1400);setTimeout(function(){buttons.classList.add('visible')},2800)}
-async function play(){await sleep(400);document.getElementById('dateChip').classList.add('visible');await sleep(400);for(var i=0;i<script.length;i++){var m=script[i];if(m.type==='call'){await sleep(m.delay);await showCallScreen();await sleep(700);var l=createCallLog();chat.appendChild(l);requestAnimationFrame(function(){requestAnimationFrame(function(){l.classList.add('visible');scrollB()})});await sleep(900);continue}if(m.type==='savethedate'){await sleep(m.delay);showFinalReveal();continue}var tt=Math.min(m.delay||1400,2200);showTyping(m.from);await sleep(Math.max(600,tt*.65));hideTyping(m.from);var el=createMsg(m);chat.appendChild(el);if(m.from==='in')soundMsgIn();else soundMsgOut();requestAnimationFrame(function(){requestAnimationFrame(function(){el.classList.add('visible');scrollB()})});var nx=script[i+1];if(nx&&nx.from===m.from&&!nx.type)await sleep(Math.max(280,(m.delay||1e3)*.22));else await sleep(Math.max(400,(m.delay||1e3)*.35))}}
+
+function showCallScreen(){
+  return new Promise(function(resolve){
+    var s=document.getElementById('callScreen'),b=document.getElementById('swipeBtn'),a=document.getElementById('swipeArea');
+    s.classList.add('active');soundRingStart();
+    function h(e){e.preventDefault();a.removeEventListener('click',h);a.removeEventListener('touchend',h);
+      soundRingStop();soundAnswer();b.style.cssText='transform:translateY(-100px) scale(1.15);opacity:0;transition:all .4s ease';
+      setTimeout(function(){var f=document.getElementById('fadeOverlay');f.classList.add('active');
+        setTimeout(function(){s.classList.remove('active');b.style.cssText='';
+          setTimeout(function(){f.classList.remove('active');resolve()},900)},1400)},500)}
+    a.addEventListener('click',h);a.addEventListener('touchend',h)})
+}
+
+// ===== FINAL REVEAL (click to open) =====
+var finalOpened=false;
+function showFinalReveal(){
+  var overlay=document.getElementById('finalOverlay');
+  var envWrap=document.getElementById('finalEnvelopeWrap');
+
+  soundReveal();
+  overlay.classList.add('active');
+
+  // Wait for click on the envelope
+  function handleFinalClick(e){
+    if(finalOpened)return;finalOpened=true;
+    envWrap.removeEventListener('click',handleFinalClick);
+    envWrap.removeEventListener('touchend',handleFinalClick);
+    envWrap.style.cursor='default';
+    document.getElementById('finalTapHint').style.display='none';
+
+    soundSeal();
+
+    // Open flap
+    document.getElementById('openFlap').style.display='block';
+    var cf=document.getElementById('closedFlap');
+    cf.style.transition='opacity .6s ease';
+    cf.style.opacity='0';
+    setTimeout(function(){cf.style.display='none'},600);
+
+    // Show card area, slide envelope away
+    var cardArea=document.getElementById('finalCardArea');
+    var card=document.getElementById('finalCard');
+    var btns=document.getElementById('actionButtons');
+
+    setTimeout(function(){
+      cardArea.classList.add('show');
+      card.classList.add('reveal');
+    },600);
+
+    setTimeout(function(){
+      envWrap.classList.add('away');
+    },1200);
+
+    // Show buttons after card is revealed
+    setTimeout(function(){
+      btns.classList.add('show');
+    },2800);
+  }
+
+  envWrap.addEventListener('click',handleFinalClick);
+  envWrap.addEventListener('touchend',function(e){e.preventDefault();handleFinalClick(e)});
+}
+
+// ===== CALENDAR =====
+function addToCalendar(){
+  var ics=[
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Amanda&Gabriel//SaveTheDate//PT',
+    'BEGIN:VEVENT',
+    'DTSTART:20260912T100000',
+    'DTEND:20260913T040000',
+    'SUMMARY:Casamento Amanda & Gabriel ❤️',
+    'LOCATION:Hortolândia, SP',
+    'DESCRIPTION:Casamento de Amanda e Gabriel - Mais informações em breve!',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+  var blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='casamento-amanda-gabriel.ics';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+// ===== DOWNLOAD CARD =====
+function downloadCard(){
+  var card=document.getElementById('stdCardCapture');
+  if(typeof html2canvas!=='undefined'){
+    html2canvas(card,{scale:3,useCORS:true,backgroundColor:'#FDFBF8'}).then(function(canvas){
+      var a=document.createElement('a');
+      a.href=canvas.toDataURL('image/png');
+      a.download='save-the-date-amanda-gabriel.png';
+      a.click();
+    });
+  }else{
+    alert('Não foi possível gerar a imagem. Tire um print da tela!');
+  }
+}
+
+// ===== PLAY =====
+async function play(){
+  await sleep(400);document.getElementById('dateChip').classList.add('visible');await sleep(400);
+  for(var i=0;i<script.length;i++){
+    var m=script[i];
+    if(m.type==='call'){await sleep(m.delay);await showCallScreen();await sleep(700);
+      var l=createCallLog();chat.appendChild(l);
+      requestAnimationFrame(function(){requestAnimationFrame(function(){l.classList.add('visible');scrollB()})});
+      await sleep(900);continue}
+    if(m.type==='savethedate'){await sleep(m.delay);showFinalReveal();continue}
+    var tt=Math.min(m.delay||1400,2200);showTyping(m.from);await sleep(Math.max(600,tt*.65));hideTyping(m.from);
+    var el=createMsg(m);chat.appendChild(el);
+    if(m.from==='in')soundMsgIn();else soundMsgOut();
+    requestAnimationFrame(function(){requestAnimationFrame(function(){el.classList.add('visible');scrollB()})});
+    var nx=script[i+1];
+    if(nx&&nx.from===m.from&&!nx.type)await sleep(Math.max(280,(m.delay||1e3)*.22));
+    else await sleep(Math.max(400,(m.delay||1e3)*.35));
+  }
+}
 </script>
 </body>
 </html>
