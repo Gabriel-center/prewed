@@ -102,7 +102,7 @@
   .final-tap-hint{font-size:12px;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;margin-top:16px;text-align:center;opacity:0;animation:hintIn .6s ease .8s forwards;font-weight:500}
 
   .final-card-area{display:none;flex-direction:column;align-items:center;gap:20px}
-  .final-card-area.show{display:flex}
+  .final-card-area.show{display:flex;position:relative;z-index:20}
 
   .final-card-wrapper{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform 1s cubic-bezier(.22,1,.36,1)}
   .final-card-wrapper.reveal{opacity:1;transform:translateY(0)}
@@ -164,6 +164,17 @@
 
   @media(min-width:431px){.phone-frame{border-left:1px solid #ccc;border-right:1px solid #ccc}}
   @supports(padding-bottom:env(safe-area-inset-bottom)){.wa-input-bar{padding-bottom:calc(6px + env(safe-area-inset-bottom))}}
+
+  /* ========== CAPTURE STATE (html2canvas) ========== */
+  .std-card.capturing .wc-blob{opacity:1!important;transform:scale(1)!important;filter:blur(20px)!important;animation:none!important}
+  .std-card.capturing .wc-drip{opacity:.8!important;transform:scaleY(1)!important;animation:none!important}
+  .std-card.capturing .std-eyebrow,
+  .std-card.capturing .std-names,
+  .std-card.capturing .std-line,
+  .std-card.capturing .std-date,
+  .std-card.capturing .std-city,
+  .std-card.capturing .std-years,
+  .std-card.capturing .std-footer{opacity:1!important;transform:translateY(0)!important;animation:none!important}
 </style>
 </head>
 <body>
@@ -310,7 +321,7 @@ function openEnvelope(){
   if(started)return;started=true;
   initAudio();soundSeal();
   // Play music
-  try{var m=document.getElementById('bgMusic');m.currentTime=0;m.play().catch(function(){})}catch(e){}
+  try{var m=document.getElementById('bgMusic');m.load();m.currentTime=0;var p=m.play();if(p!==undefined)p.catch(function(){})}catch(e){}
   document.getElementById('envelopeWrapper').classList.add('opening');
   setTimeout(function(){
     document.getElementById('introScreen').classList.add('hidden');
@@ -436,21 +447,25 @@ function addToCalendar(){
   var blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a');
-  a.href=url;a.download='casamento-amanda-gabriel.ics';
+  a.href=url;
   document.body.appendChild(a);a.click();
-  document.body.removeChild(a);URL.revokeObjectURL(url);
+  document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(url)},1000);
 }
 
 // ===== DOWNLOAD CARD =====
 function downloadCard(){
   var card=document.getElementById('stdCardCapture');
   if(typeof html2canvas!=='undefined'){
-    html2canvas(card,{scale:3,useCORS:true,backgroundColor:'#FDFBF8'}).then(function(canvas){
-      var a=document.createElement('a');
-      a.href=canvas.toDataURL('image/png');
-      a.download='save-the-date-amanda-gabriel.png';
-      a.click();
-    });
+    card.classList.add('capturing');
+    setTimeout(function(){
+      html2canvas(card,{scale:3,useCORS:true,allowTaint:true,backgroundColor:'#FDFBF8'}).then(function(canvas){
+        card.classList.remove('capturing');
+        var a=document.createElement('a');
+        a.href=canvas.toDataURL('image/png');
+        a.download='save-the-date-amanda-gabriel.png';
+        a.click();
+      }).catch(function(){card.classList.remove('capturing')});
+    },80);
   }else{
     alert('Não foi possível gerar a imagem. Tire um print da tela!');
   }
@@ -477,4 +492,5 @@ async function play(){
 }
 </script>
 </body>
+</html>
 </html>
